@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LearnPulse | Enterprise Interactive E-Learning & Assessment Platform</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Ambient Gradient Background Lights -->
+  <div class="bg-glow blob-1"></div>
+  <div class="bg-glow blob-2"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">
+        <span class="title">LearnPulse Enterprise</span>
+        <span class="badge">PORTFOLIO EDITION</span>
+      </div>
+    </div>
+    
+    <div class="stats-bar">
+      <div class="stat-card">
+        <span class="stat-label">Tracks Cleared</span>
+        <span id="completed-count" class="stat-value">0 / 6</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Mastery Index</span>
+        <span id="avg-score" class="stat-value highlight">0%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Workspace -->
+  <main class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar card-glass">
+      <div class="sidebar-header">
+        <h3>Engineering Tracks</h3>
+        <span class="subtext">6 Modular Assessment Paths</span>
+      </div>
+      <ul id="module-list" class="module-nav">
+        <!-- Dynamic module list -->
+      </ul>
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <section class="workspace">
+      <!-- Active Module Header Banner / Hero Landing View -->
+      <div id="module-banner" class="card-glass banner-card">
+        <div class="banner-content">
+          <span id="module-tag" class="pill-tag">Interactive Portfolio Project</span>
+          <h1 id="module-title">Enterprise Full-Stack Learning & Assessment Hub</h1>
+          <p id="module-description">
+            A modular full-stack application engineered with modern JavaScript, Angular principles, and Node.js backend architecture. Select any technical track from the sidebar to launch an adaptive 10-question diagnostic test featuring randomized single-choice, true/false, and multi-select checkbox validation.
+          </p>
+        </div>
+
+        <!-- Resume Feature Highlights Grid (Shows on Landing) -->
+        <div id="hero-features" class="hero-features-grid">
+          <div class="feature-pill">
+            <span class="f-icon">🛡️</span>
+            <div>
+              <strong>Secure REST API Connectors</strong>
+              <p>Optimized client-server state synchronization</p>
+            </div>
+          </div>
+          <div class="feature-pill">
+            <span class="f-icon">🔄</span>
+            <div>
+              <strong>Adaptive Question Engine</strong>
+              <p>Dynamic shuffling & mixed interactive formats</p>
+            </div>
+          </div>
+          <div class="feature-pill">
+            <span class="f-icon">📊</span>
+            <div>
+              <strong>Real-Time Score Tracking</strong>
+              <p>Instant visual feedback & mastery analytics</p>
+            </div>
+          </div>
+          <div class="feature-pill">
+            <span class="f-icon">⚡</span>
+            <div>
+              <strong>Production Optimized UI</strong>
+              <p>Dark glassmorphism design system & responsive grid</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assessment Engine -->
+      <div id="quiz-container" class="card-glass quiz-card hidden">
+        <div class="quiz-header">
+          <div>
+            <h2 id="quiz-heading">Adaptive Technical Diagnostic</h2>
+            <p class="subtext">Mixed Formats (Radio, Boolean & Multi-Select Checkboxes) • Immediate Validation</p>
+          </div>
+          <div id="progress-indicator" class="progress-pill">Randomized Session</div>
+        </div>
+
+        <form id="quiz-form">
+          <div id="questions-wrapper" class="questions-space"></div>
+          
+          <div class="form-actions">
+            <button type="submit" id="submit-btn" class="btn btn-primary">
+              <span>Submit & Review Answers</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+        </form>
+
+        <div id="result-box" class="result-card hidden"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

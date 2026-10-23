@@ -1,0 +1,41 @@
+{
+  "info": {
+    "name": "E-Learning Assessment API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get User Scores",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:5000/api/scores",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "scores"]
+        }
+      }
+    },
+    {
+      "name": "Submit Module Score",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"moduleId\": 1,\n  \"score\": 90\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/api/scores",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["api", "scores"]
+        }
+      }
+    }
+  ]
+}
