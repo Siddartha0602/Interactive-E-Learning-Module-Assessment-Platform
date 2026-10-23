@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>LearnPulse | Enterprise Interactive E-Learning & Assessment Platform</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,29 +17,33 @@
   <!-- Navigation Bar -->
   <header class="navbar">
     <div class="brand">
+      <button id="menu-toggle" class="menu-toggle-btn" aria-label="Toggle Navigation">☰</button>
       <div class="logo-icon">⚡</div>
       <div class="logo-text">
-        <span class="title">LearnPulse Enterprise</span>
-        <span class="badge">PORTFOLIO EDITION</span>
+        <span class="title">LearnPulse</span>
+        <span class="badge">INTERACTIVE PRO</span>
       </div>
     </div>
     
     <div class="stats-bar">
       <div class="stat-card">
-        <span class="stat-label">Tracks Cleared</span>
+        <span class="stat-label">Cleared</span>
         <span id="completed-count" class="stat-value">0 / 6</span>
       </div>
       <div class="stat-card">
-        <span class="stat-label">Mastery Index</span>
+        <span class="stat-label">Mastery</span>
         <span id="avg-score" class="stat-value highlight">0%</span>
       </div>
     </div>
   </header>
 
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
   <!-- Main Grid Workspace -->
   <main class="app-layout">
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar card-glass">
+    <!-- Sidebar Navigation Drawer -->
+    <aside id="sidebar" class="sidebar card-glass">
       <div class="sidebar-header">
         <h3>Engineering Tracks</h3>
         <span class="subtext">6 Modular Assessment Paths</span>
@@ -57,38 +61,38 @@
           <span id="module-tag" class="pill-tag">Interactive Portfolio Project</span>
           <h1 id="module-title">Enterprise Full-Stack Learning & Assessment Hub</h1>
           <p id="module-description">
-            A modular full-stack application engineered with modern JavaScript, Angular principles, and Node.js backend architecture. Select any technical track from the sidebar to launch an adaptive 10-question diagnostic test featuring randomized single-choice, true/false, and multi-select checkbox validation.
+            A modular application engineered with modern JavaScript, Angular principles, and Node.js architecture. Select any technical track from the menu to launch an adaptive 10-question diagnostic test.
           </p>
         </div>
 
-        <!-- Resume Feature Highlights Grid (Shows on Landing) -->
+        <!-- Resume Feature Highlights Grid -->
         <div id="hero-features" class="hero-features-grid">
           <div class="feature-pill">
             <span class="f-icon">🛡️</span>
             <div>
-              <strong>Secure REST API Connectors</strong>
-              <p>Optimized client-server state synchronization</p>
+              <strong>Secure REST APIs</strong>
+              <p>Client-server state synchronization</p>
             </div>
           </div>
           <div class="feature-pill">
             <span class="f-icon">🔄</span>
             <div>
-              <strong>Adaptive Question Engine</strong>
-              <p>Dynamic shuffling & mixed interactive formats</p>
+              <strong>Adaptive Engine</strong>
+              <p>Dynamic shuffling & mixed formats</p>
             </div>
           </div>
           <div class="feature-pill">
             <span class="f-icon">📊</span>
             <div>
-              <strong>Real-Time Score Tracking</strong>
-              <p>Instant visual feedback & mastery analytics</p>
+              <strong>Real-Time Analytics</strong>
+              <p>Instant visual validation metrics</p>
             </div>
           </div>
           <div class="feature-pill">
-            <span class="f-icon">⚡</span>
+            <span class="f-icon">📱</span>
             <div>
-              <strong>Production Optimized UI</strong>
-              <p>Dark glassmorphism design system & responsive grid</p>
+              <strong>Fully Responsive</strong>
+              <p>Optimized for mobile, tablet & desktop</p>
             </div>
           </div>
         </div>
@@ -99,9 +103,17 @@
         <div class="quiz-header">
           <div>
             <h2 id="quiz-heading">Adaptive Technical Diagnostic</h2>
-            <p class="subtext">Mixed Formats (Radio, Boolean & Multi-Select Checkboxes) • Immediate Validation</p>
+            <p class="subtext">Mixed Formats • Interactive Question Jump Palette</p>
           </div>
           <div id="progress-indicator" class="progress-pill">Randomized Session</div>
+        </div>
+
+        <!-- Interactive Question Jump Palette -->
+        <div class="palette-container">
+          <span class="palette-label">Quick Jump:</span>
+          <div id="question-palette" class="question-palette">
+            <!-- Dynamic Q-buttons 1-10 -->
+          </div>
         </div>
 
         <form id="quiz-form">

@@ -504,6 +504,26 @@ const quizFormEl = document.getElementById('quiz-form');
 const resultBoxEl = document.getElementById('result-box');
 const completedCountEl = document.getElementById('completed-count');
 const avgScoreEl = document.getElementById('avg-score');
+const questionPaletteEl = document.getElementById('question-palette');
+
+const menuToggleBtn = document.getElementById('menu-toggle');
+const sidebarEl = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const heroFeaturesEl = document.getElementById('hero-features');
+
+if (menuToggleBtn) {
+  menuToggleBtn.onclick = () => {
+    sidebarEl.classList.toggle('open');
+    sidebarOverlay.classList.toggle('active');
+  };
+}
+
+if (sidebarOverlay) {
+  sidebarOverlay.onclick = () => {
+    sidebarEl.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+  };
+}
 
 function shuffleArray(array) {
   const arr = [...array];
@@ -540,11 +560,19 @@ function renderModuleList() {
 function selectModule(id) {
   activeModuleId = id;
   renderModuleList();
+  
+  if (window.innerWidth <= 1024) {
+    sidebarEl.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+  }
+
   const mod = modules.find((m) => m.id === id);
 
   tagEl.innerText = `Module 0${mod.id}`;
   titleEl.innerText = mod.title;
   descEl.innerText = mod.description;
+  if (heroFeaturesEl) heroFeaturesEl.classList.add('hidden');
+  
   quizContainerEl.classList.remove('hidden');
   resultBoxEl.classList.add('hidden');
 
@@ -555,6 +583,8 @@ function selectModule(id) {
   }));
 
   renderQuiz(currentActiveQuestions);
+  renderPalette();
+  setupScrollSpy();
 }
 
 function renderQuiz(questions) {
@@ -562,8 +592,9 @@ function renderQuiz(questions) {
   questions.forEach((q) => {
     const div = document.createElement('div');
     div.className = 'q-card';
+    div.id = `question-card-${q.displayIndex}`;
     div.dataset.qid = q.id;
-    div.dataset.qtype = q.type;
+    div.dataset.qindex = q.displayIndex;
     
     let inputType = 'radio';
     let typeLabel = 'Single Choice';
@@ -579,7 +610,7 @@ function renderQuiz(questions) {
     q.shuffledOptions.forEach((opt) => {
       optionsHTML += `
         <label class="option-btn" data-option="${opt}">
-          <input type="${inputType}" name="${q.id}" value="${opt}" />
+          <input type="${inputType}" name="${q.id}" value="${opt}" onchange="updatePaletteState()" />
           <span>${opt}</span>
         </label>
       `;
@@ -597,6 +628,79 @@ function renderQuiz(questions) {
   });
 }
 
+function renderPalette() {
+  questionPaletteEl.innerHTML = '';
+  currentActiveQuestions.forEach((q) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'palette-btn';
+    btn.id = `palette-btn-${q.displayIndex}`;
+    btn.innerText = q.displayIndex;
+    btn.onclick = () => {
+      const targetCard = document.getElementById(`question-card-${q.displayIndex}`);
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        highlightCard(q.displayIndex);
+      }
+    };
+    questionPaletteEl.appendChild(btn);
+  });
+}
+
+function updatePaletteState() {
+  const formData = new FormData(quizFormEl);
+  currentActiveQuestions.forEach((q) => {
+    const btn = document.getElementById(`palette-btn-${q.displayIndex}`);
+    if (!btn) return;
+
+    if (q.type === 'multiple') {
+      const selected = formData.getAll(q.id);
+      if (selected.length > 0) {
+        btn.classList.add('answered');
+      } else {
+        btn.classList.remove('answered');
+      }
+    } else {
+      const selected = formData.get(q.id);
+      if (selected) {
+        btn.classList.add('answered');
+      } else {
+        btn.classList.remove('answered');
+      }
+    }
+  });
+}
+
+function highlightCard(index) {
+  document.querySelectorAll('.q-card').forEach(card => card.classList.remove('focused-card'));
+  document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('current'));
+
+  const activeCard = document.getElementById(`question-card-${index}`);
+  const activeBtn = document.getElementById(`palette-btn-${index}`);
+
+  if (activeCard) activeCard.classList.add('focused-card');
+  if (activeBtn) activeBtn.classList.add('current');
+}
+
+function setupScrollSpy() {
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const index = entry.target.dataset.qindex;
+        highlightCard(index);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.q-card').forEach(card => observer.observe(card));
+}
+
 quizFormEl.onsubmit = (e) => {
   e.preventDefault();
   const formData = new FormData(quizFormEl);
@@ -610,7 +714,7 @@ quizFormEl.onsubmit = (e) => {
     let isCorrect = false;
 
     if (q.type === 'multiple') {
-      const userSelected = formData.getAll(q.id); // array of checked values
+      const userSelected = formData.getAll(q.id);
       const sortedUser = [...userSelected].sort();
       const sortedAns = [...q.answer].sort();
 
@@ -661,7 +765,7 @@ quizFormEl.onsubmit = (e) => {
   if (percentage >= 70) {
     resultBoxEl.innerHTML = `
       🎉 <strong>Congratulations! You passed the adaptive assessment!</strong> 
-      <br/>Score: ${percentage}% (${correct}/10 correct). Exceptional technical mastery! Click the module again anytime for a fresh randomized question set.
+      <br/>Score: ${percentage}% (${correct}/10 correct). Exceptional technical mastery! Click any module again anytime for a fresh randomized question set.
     `;
   } else {
     resultBoxEl.innerHTML = `
@@ -684,4 +788,37 @@ function updateStats() {
   avgScoreEl.innerText = `${avg}%`;
 }
 
+function updatePaletteState() {
+  const formData = new FormData(quizFormEl);
+  currentActiveQuestions.forEach((q) => {
+    const btn = document.getElementById(`palette-btn-${q.displayIndex}`);
+    if (!btn) return;
+
+    let isAnswered = false;
+    if (q.type === 'multiple') {
+      const selected = formData.getAll(q.id);
+      if (selected.length > 0) isAnswered = true;
+    } else {
+      const selected = formData.get(q.id);
+      if (selected) isAnswered = true;
+    }
+
+    if (isAnswered) {
+      btn.classList.add('answered');
+    } else {
+      btn.classList.remove('answered');
+    }
+  });
+}
+
+function highlightCard(index) {
+  document.querySelectorAll('.q-card').forEach(card => card.classList.remove('focused-card'));
+  document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('current'));
+
+  const activeCard = document.getElementById(`question-card-${index}`);
+  const activeBtn = document.getElementById(`palette-btn-${index}`);
+
+  if (activeCard) activeCard.classList.add('focused-card');
+  if (activeBtn) activeBtn.classList.add('current'); // Sets orange/yellow ONLY for the currently viewed question
+}
 init();
